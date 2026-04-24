@@ -91,6 +91,7 @@ const data = {
 };
 
 const roles = ["Building RESTful APIs", "Scaling Backend Systems", "Node.js Engineer", "Real-time Systems Dev", "Full-stack Problem Solver"];
+const breakpoints = { xs: 480, sm: 720, md: 960, lg: 1200 };
 
 function useTypewriter(words, typingSpeed = 95, deletingSpeed = 50, pauseMs = 1800) {
   const [display, setDisplay] = useState("");
@@ -156,7 +157,8 @@ function NavBar({ scrollTo }) {
   const { t } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const width = useWindowWidth();
-  const isMobile = width <= 720;
+  const isMobile = width <= breakpoints.sm;
+  const isTablet = width <= breakpoints.md;
   const navItems = ["about", "experience", "projects", "resume", "awards", "contact"];
 
   return (
@@ -164,20 +166,20 @@ function NavBar({ scrollTo }) {
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 200,
         display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: isMobile ? "0.75rem 1rem" : "0.85rem 2.5rem",
+        padding: isMobile ? "0.75rem 1rem" : isTablet ? "0.85rem 1.5rem" : "0.85rem 2.5rem",
         background: t.bgNav, backdropFilter: "blur(16px)",
         borderBottom: `1px solid ${t.border}`, transition: "background 0.3s, border-color 0.3s",
       }}>
         <div onClick={() => { scrollTo("hero"); setMenuOpen(false); }}
-          style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.9rem", color: t.accent, letterSpacing: "0.1em", cursor: "pointer", userSelect: "none" }}>
+          style={{ fontFamily: "'Space Mono', monospace", fontSize: isMobile ? "0.82rem" : "0.9rem", color: t.accent, letterSpacing: "0.1em", cursor: "pointer", userSelect: "none" }}>
           anjali.dev
         </div>
 
         {!isMobile && (
-          <div style={{ display: "flex", gap: "1.4rem", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: isTablet ? "1rem" : "1.4rem", alignItems: "center" }}>
             {navItems.map(s => (
               <button key={s} onClick={() => scrollTo(s)}
-                style={{ color: t.textNav, background: "none", border: "none", fontFamily: "'Sora', sans-serif", fontSize: "0.84rem", cursor: "pointer", letterSpacing: "0.04em", transition: "color 0.2s" }}>
+                style={{ color: t.textNav, background: "none", border: "none", fontFamily: "'Sora', sans-serif", fontSize: isTablet ? "0.78rem" : "0.84rem", cursor: "pointer", letterSpacing: "0.04em", transition: "color 0.2s" }}>
                 {s}
               </button>
             ))}
@@ -198,7 +200,7 @@ function NavBar({ scrollTo }) {
 
       {/* Full-screen mobile drawer */}
       {isMobile && menuOpen && (
-        <div style={{ position: "fixed", top: 57, left: 0, right: 0, bottom: 0, zIndex: 199, background: t.bgDrawer, display: "flex", flexDirection: "column" }}>
+        <div style={{ position: "fixed", top: 61, left: 0, right: 0, bottom: 0, zIndex: 199, background: t.bgDrawer, display: "flex", flexDirection: "column" }}>
           {navItems.map(s => (
             <button key={s} onClick={() => { scrollTo(s); setMenuOpen(false); }}
               style={{ color: t.textNavMobile, background: "none", border: "none", borderBottom: `1px solid ${t.border}`, fontFamily: "'Sora', sans-serif", fontSize: "1rem", padding: "1rem 1.5rem", textAlign: "left", cursor: "pointer" }}>
@@ -215,8 +217,8 @@ function Hero({ scrollTo }) {
   const { t } = useTheme();
   const typed = useTypewriter(roles);
   const width = useWindowWidth();
-  const sm = width <= 480;
-  const md = width <= 720;
+  const sm = width <= breakpoints.xs;
+  const md = width <= breakpoints.sm;
 
   return (
     <section id="hero" style={{
@@ -229,7 +231,7 @@ function Hero({ scrollTo }) {
       <div style={{ position: "absolute", inset: 0, backgroundImage: `linear-gradient(${t.accentGridLine} 1px,transparent 1px),linear-gradient(90deg,${t.accentGridLine} 1px,transparent 1px)`, backgroundSize: sm ? "28px 28px" : "48px 48px", zIndex: 0 }} />
       <div style={{ position: "absolute", width: "min(500px,80vw)", height: "min(500px,80vw)", background: `radial-gradient(circle,${t.accentGlow} 0%,transparent 70%)`, borderRadius: "50%", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: 0, animation: "pulse 4s ease-in-out infinite" }} />
 
-      <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: sm ? "100%" : 680 }}>
+      <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: sm ? "100%" : 760, margin: "0 auto" }}>
         <div style={{ display: "inline-block", fontFamily: "'Space Mono', monospace", fontSize: sm ? "0.6rem" : "0.72rem", color: t.green, border: t.badgeBorder, padding: "0.28rem 0.85rem", borderRadius: "100px", marginBottom: "1.25rem", letterSpacing: "0.04em" }}>
           Backend Software Engineer ⚡
         </div>
@@ -261,12 +263,13 @@ function Hero({ scrollTo }) {
 function Section({ id, label, title, children }) {
   const { t } = useTheme();
   const width = useWindowWidth();
-  const sm = width <= 480;
-  const md = width <= 720;
+  const sm = width <= breakpoints.xs;
+  const md = width <= breakpoints.sm;
+  const lg = width <= breakpoints.lg;
 
   return (
-    <section id={id} style={{ padding: sm ? "3rem 1rem" : md ? "4rem 1.5rem" : "5rem 2rem", maxWidth: 980, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
-      <div style={{ borderTop: `1px solid ${t.sectionDivider}`, paddingTop: sm ? "1.75rem" : "2.25rem" }}>
+    <section id={id} style={{ padding: sm ? "3rem 1rem" : md ? "4rem 1.5rem" : lg ? "4.75rem 2rem" : "5rem 2.5rem", maxWidth: 1120, margin: "0 auto", width: "100%", boxSizing: "border-box" }}>
+      <div style={{ borderTop: `1px solid ${t.sectionDivider}`, paddingTop: sm ? "1.75rem" : "2.25rem", textAlign: "left" }}>
         <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.65rem", color: t.accent, letterSpacing: "0.18em", marginBottom: "0.45rem", textTransform: "uppercase" }}>{label}</div>
         <h2 style={{ fontSize: sm ? "1.35rem" : md ? "1.6rem" : "clamp(1.6rem,3.5vw,2.1rem)", fontWeight: 700, marginBottom: sm ? "1.35rem" : "1.85rem", lineHeight: 1.2, color: t.text }}>{title}</h2>
         {children}
@@ -279,11 +282,12 @@ function Experience() {
   const { t } = useTheme();
   const [openIdx, setOpenIdx] = useState(null);
   const width = useWindowWidth();
-  const sm = width <= 480;
+  const sm = width <= breakpoints.xs;
+  const md = width <= breakpoints.sm;
 
   return (
     <Section id="experience" label="// 01. experience" title="Where I've worked">
-      <div style={{ position: "relative", paddingLeft: sm ? "1.1rem" : "1.75rem" }}>
+      <div style={{ position: "relative", paddingLeft: sm ? "1.1rem" : "1.8rem" }}>
         <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 1, background: `linear-gradient(to bottom,${t.accent},transparent)` }} />
         {data.experience.map((exp, i) => {
           const isOpen = openIdx === i;
@@ -291,10 +295,10 @@ function Experience() {
             <div key={i} style={{ position: "relative", marginBottom: "1.1rem" }}>
               <div style={{ position: "absolute", left: sm ? "-1.45rem" : "-2.05rem", top: "1.15rem", width: 9, height: 9, borderRadius: "50%", background: isOpen ? t.pink : t.accent, boxShadow: isOpen ? `0 0 10px ${t.pink}` : "none", transition: "all 0.3s" }} />
               <div onClick={() => setOpenIdx(isOpen ? null : i)}
-                style={{ background: t.bgCard, border: `1px solid ${isOpen ? t.borderActive : t.border}`, borderRadius: 12, padding: sm ? "0.9rem" : "1.35rem", cursor: "pointer", transition: "border-color 0.3s" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "0.4rem", marginBottom: "0.3rem" }}>
-                  <span style={{ fontWeight: 600, fontSize: sm ? "0.84rem" : "0.95rem", color: t.text, lineHeight: 1.4, flex: "1 1 auto", marginRight: "0.5rem" }}>{exp.title}</span>
-                  <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.65rem", color: t.green, background: t.greenBg, padding: "0.18rem 0.5rem", borderRadius: 4, whiteSpace: "nowrap", flexShrink: 0 }}>{exp.period}</span>
+                style={{ background: t.bgCard, border: `1px solid ${isOpen ? t.borderActive : t.border}`, borderRadius: 12, padding: sm ? "0.9rem" : "1.35rem", cursor: "pointer", transition: "border-color 0.3s", textAlign: "left" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: md ? "flex-start" : "center", flexDirection: md ? "column" : "row", gap: md ? "0.5rem" : "0.4rem", marginBottom: "0.3rem" }}>
+                  <span style={{ fontWeight: 600, fontSize: sm ? "0.84rem" : "0.95rem", color: t.text, lineHeight: 1.4, flex: "1 1 auto", marginRight: md ? 0 : "0.5rem" }}>{exp.title}</span>
+                  <span style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.65rem", color: t.green, background: t.greenBg, padding: "0.18rem 0.5rem", borderRadius: 4, whiteSpace: "nowrap", flexShrink: 0, marginLeft: md ? 0 : "auto" }}>{exp.period}</span>
                 </div>
                 <div style={{ color: t.accent, fontSize: "0.78rem", marginBottom: "0.45rem" }}>{exp.company} · {exp.location}</div>
                 <div style={{ fontFamily: "'Space Mono', monospace", fontSize: "0.62rem", color: t.textMuted }}>{isOpen ? "▲ collapse" : "▼ expand"}</div>
@@ -319,12 +323,13 @@ function Experience() {
 function Skills() {
   const { t } = useTheme();
   const width = useWindowWidth();
-  const sm = width <= 480;
-  const md = width <= 720;
+  const sm = width <= breakpoints.xs;
+  const md = width <= breakpoints.sm;
+  const lg = width <= breakpoints.md;
 
   return (
     <Section id="about" label="// 02. skills" title="Technical Expertise">
-      <div style={{ display: "grid", gridTemplateColumns: sm ? "1fr" : md ? "1fr 1fr" : "repeat(3, 1fr)", gap: "0.8rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: sm ? "1fr" : md ? "1fr 1fr" : lg ? "repeat(2, 1fr)" : "repeat(3, 1fr)", gap: "0.8rem" }}>
         {data.skills.map(cat => {
           const c = t.tagColors[cat.color];
           return (
@@ -346,12 +351,13 @@ function Skills() {
 function Projects() {
   const { t } = useTheme();
   const width = useWindowWidth();
-  const sm = width <= 480;
-  const md = width <= 720;
+  const sm = width <= breakpoints.xs;
+  const md = width <= breakpoints.sm;
+  const lg = width <= breakpoints.md;
 
   return (
     <Section id="projects" label="// 03. projects" title="Things I've built">
-      <div style={{ display: "grid", gridTemplateColumns: sm ? "1fr" : md ? "1fr" : "repeat(2, 1fr)", gap: "1rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: sm ? "1fr" : md ? "1fr" : lg ? "1fr 1fr" : "repeat(2, 1fr)", gap: "1rem" }}>
         {data.projects.map(p => (
           <div key={p.name}
             style={{ background: t.bgCard, border: `1px solid ${t.border}`, borderRadius: 12, padding: sm ? "1rem" : "1.35rem", display: "flex", flexDirection: "column", transition: "transform 0.25s, border-color 0.25s" }}
@@ -382,7 +388,7 @@ function Projects() {
 function Resume() {
   const { t } = useTheme();
   const width = useWindowWidth();
-  const sm = width <= 480;
+  const sm = width <= breakpoints.xs;
 
   return (
     <Section id="resume" label="// 04. resume" title="My Resume">
@@ -411,7 +417,7 @@ function Resume() {
 function Awards() {
   const { t } = useTheme();
   const width = useWindowWidth();
-  const sm = width <= 480;
+  const sm = width <= breakpoints.xs;
 
   return (
     <Section id="awards" label="// 05. awards" title="Recognition">
@@ -436,25 +442,27 @@ function Awards() {
 function Contact() {
   const { t } = useTheme();
   const width = useWindowWidth();
-  const sm = width <= 480;
+  const sm = width <= breakpoints.xs;
+  const md = width <= breakpoints.sm;
 
   return (
     <Section id="contact" label="// 06. contact" title="Let's build something">
-      <div style={{ background: t.bgCard, border: `1px solid ${t.border}`, borderRadius: 16, maxWidth: 520, margin: "0 auto", padding: sm ? "1.75rem 1.1rem" : "2.75rem 2rem", textAlign: "center" }}>
-        <p style={{ color: t.textMuted, fontSize: sm ? "0.82rem" : "0.88rem", lineHeight: 1.8, marginBottom: "1.1rem" }}>
+      <div style={{ background: t.bgCard, border: `1px solid ${t.border}`, borderRadius: 16, width: "100%", maxWidth: "100%", margin: "0 auto", padding: sm ? "1.9rem 1rem" : md ? "2.5rem 1.6rem" : "3rem 2rem", display: "flex", flexDirection: "column", alignItems: "center", gap: sm ? "0.9rem" : "1rem", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", width: sm ? 220 : 300, height: sm ? 220 : 300, background: `radial-gradient(circle,${t.accentGlow} 0%,transparent 70%)`, borderRadius: "50%", top: "50%", left: "50%", transform: "translate(-50%,-50%)", pointerEvents: "none" }} />
+        <p style={{ color: t.textMuted, fontSize: sm ? "0.82rem" : "0.9rem", lineHeight: 1.8, margin: 0, maxWidth: 620, position: "relative" }}>
           Open to new opportunities, collaborations, and interesting projects. Reach out anytime!
         </p>
         <a href={`mailto:${data.email}`}
-          style={{ display: "block", fontFamily: "'Space Mono', monospace", fontSize: sm ? "0.68rem" : "0.8rem", color: t.accent, margin: "0 0 1.1rem", textDecoration: "none", wordBreak: "break-all" }}>
+          style={{ display: "inline-block", fontFamily: "'Space Mono', monospace", fontSize: sm ? "0.68rem" : "0.8rem", color: t.accent, margin: 0, textDecoration: "none", wordBreak: "break-all", position: "relative" }}>
           {data.email}
         </a>
         <a href={`https://mail.google.com/mail/?view=cm&fs=1&to=${data.email}&su=Hey%20Anjali!&body=Hi%20Anjali,%0A%0A`}
           target="_blank" rel="noreferrer"
-          style={{ display: "inline-block", padding: sm ? "0.6rem 1.4rem" : "0.72rem 1.9rem", background: t.accent, color: "#fff", borderRadius: 8, fontFamily: "'Sora', sans-serif", fontSize: "0.88rem", fontWeight: 600, textDecoration: "none", marginBottom: "1.6rem", transition: "opacity 0.2s" }}
+          style={{ display: "inline-block", padding: sm ? "0.6rem 1.4rem" : "0.72rem 1.9rem", background: t.accent, color: "#fff", borderRadius: 8, fontFamily: "'Sora', sans-serif", fontSize: "0.88rem", fontWeight: 600, textDecoration: "none", margin: "0.2rem 0 1rem", transition: "opacity 0.2s", position: "relative" }}
           onMouseEnter={e => e.currentTarget.style.opacity = "0.85"} onMouseLeave={e => e.currentTarget.style.opacity = "1"}>
           Say hello ✉
         </a>
-        <div style={{ display: "flex", justifyContent: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: "0.6rem", flexWrap: "wrap", position: "relative" }}>
           {data.social.map(l => (
             <a key={l.label} href={l.href} target="_blank" rel="noreferrer"
               style={{ padding: sm ? "0.45rem 0.9rem" : "0.5rem 1rem", border: `1px solid ${t.border}`, borderRadius: 8, color: t.textMuted, textDecoration: "none", fontSize: sm ? "0.75rem" : "0.83rem", transition: "border-color 0.2s, color 0.2s" }}
